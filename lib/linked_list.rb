@@ -8,15 +8,6 @@ class LinkedList
 
   @head = nil
 
-  def append(node)
-    if head.nil?
-      @head = node
-    else
-      tail = find_tail
-      tail.next = node
-    end
-  end
-
   def find_tail
     return head unless head.next
 
@@ -28,11 +19,16 @@ class LinkedList
   end
 
   def find_node(key)
-    current_node = head.next
+    return head if head.key == key
+    return nil unless head.next
+
+    current_node = head
 
     current_node = current_node.next until current_node.key == key || !current_node.next
 
-    current_node
+    return current_node if current_node.key == key
+
+    nil
   end
 
   def find_value(key)
@@ -79,7 +75,6 @@ class LinkedList
   end
 
   def length
-    return 0 unless head
     return 1 unless head.next
 
     next_node = head.next
@@ -90,5 +85,18 @@ class LinkedList
       i += 1
     end
     i
+  end
+
+  def to_s
+    print "( #{head.value} )"
+
+    current_node = head.next
+
+    while current_node
+      print " -> ( #{current_node.value} )"
+      current_node = current_node.next
+    end
+
+    print ' -> nil '
   end
 end
