@@ -11,6 +11,7 @@ class HashMap
     @load_factor = 0.75
     @capacity = 16
     @codes = []
+    @load = 0
   end
 
   # hashing methods
@@ -38,12 +39,14 @@ class HashMap
   def set(key, value)
     expand if find_load >= load_factor
     set_node(key, value)
+    print_codes
   end
 
-  def print_codes(codes)
+  def print_codes
     codes.each do |list|
-      puts list if list
+      print list || '[nil, nil] '
     end
+    puts
   end
 
   def find_load

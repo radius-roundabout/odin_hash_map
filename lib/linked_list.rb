@@ -88,15 +88,15 @@ class LinkedList
   end
 
   def to_s
-    print "( #{head.value} )"
+    print "( [#{head.key}, #{head.value}] "
 
     current_node = head.next
 
     while current_node
-      print " -> ( #{current_node.value} )"
+      print " -> ( #{[current_node.key, current_node.value]} )"
       current_node = current_node.next
     end
 
-    print ' -> nil '
+    print ' -> nil )'
   end
 end
