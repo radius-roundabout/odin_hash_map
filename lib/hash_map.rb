@@ -137,31 +137,39 @@ class HashMap
     return 0 unless codes
 
     codes.reduce(0) do |total, list|
-      total + list.length
+      if list
+        length = list.length
+        total += length
+      end
+      total
     end
   end
 
   def clear
-    codes.each do |list|
-      delete(list)
+    codes.each_index do |index|
+      @codes[index] = nil
     end
   end
 
   def keys
-    codes.reduce([]) do |key_array, list|
+    codes.each_with_object([]) do |list, key_array|
+      next unless list
+
       current_node = list.head
       while current_node
-        key_array.push(current_node.key)
+        key_array << current_node.key
         current_node = current_node.next
       end
     end
   end
 
   def entries
-    codes.reduce([]) do |key_array, list|
+    codes.each_with_object([]) do |list, key_array|
+      next unless list
+
       current_node = list.head
       while current_node
-        key_array.push([current_node.key, current_node.value])
+        key_array << [current_node.key, current_node.value]
         current_node = current_node.next
       end
     end

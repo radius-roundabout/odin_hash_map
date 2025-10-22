@@ -32,23 +32,19 @@ class LinkedList
   end
 
   def find_value(key)
-    return value if head.key == key
-
     current_node = find_node(key)
 
-    return value if current_node.value == value
+    return nil unless current_node
 
-    nil
+    current_node.value
   end
 
   def includes_value?(key)
-    return true if head.key == key
-
     current_node = find_node(key)
 
-    return true if current_node.value == value
+    return false unless current_node
 
-    false
+    true
   end
 
   def remove_at(key)
