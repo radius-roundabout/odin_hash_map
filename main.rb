@@ -17,4 +17,7 @@ test.set('jacket', 'blue')
 test.set('kite', 'pink')
 test.set('lion', 'golden')
 
-print test
+print(test.load.to_f / test.capacity)
+
+test.set('ice cream', 'green')
+test.set('jacket', 'purple')

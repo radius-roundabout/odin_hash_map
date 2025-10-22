@@ -5,7 +5,7 @@ require_relative 'node'
 
 # hash map class
 class HashMap
-  attr_accessor :load_factor, :capacity, :codes
+  attr_accessor :load_factor, :capacity, :codes, :load
 
   def initialize
     @load_factor = 0.75
@@ -37,51 +37,59 @@ class HashMap
   end
 
   def set(key, value)
-    expand if find_load >= load_factor
-    set_node(key, value)
-    print_codes
+    hash_code = hash(key)
+    list = codes[hash_code]
+
+    if list
+      existing_key = check_for_key(list, key, value)
+      return if existing_key
+    end
+
+    expand if (load.to_f / capacity) >= load_factor
+    new_node = Node.new(key, value)
+
+    return create_new_list(hash_code, new_node) unless list
+
+    add_to_list(list, new_node)
   end
 
+  def check_for_key(list, key, value)
+    key_included = list.find_node(key)
+    return nil unless key_included
+
+    key_included.value = value
+
+    print_codes
+    puts load
+
+    key_included
+  end
+
+  def create_new_list(code, node)
+    list = LinkedList.new
+    list.head = node
+    @codes[code] = list
+    @load += 1
+
+    print_codes
+    puts load
+  end
+
+  def add_to_list(list, node)
+    tail = list.find_tail
+    tail.next = node
+    @load += 1
+
+    print_codes
+    puts load
+  end
+
+  # print hash map entries as arrays or linked lists of arrays
   def print_codes
     codes.each do |list|
       print list || '[nil, nil] '
     end
     puts
-  end
-
-  def find_load
-    return 0 if codes.empty?
-
-    full_buckets = codes.reduce(0) do |total, value|
-      total += 1 if value.instance_of?(LinkedList)
-      total
-    end
-
-    full_buckets.to_f / @capacity
-  end
-
-  def set_node(key, value)
-    hash_code = hash(key)
-    new_node = Node.new(key, value)
-
-    return new_list(new_node, hash_code) if codes[hash_code].nil?
-
-    list = codes[hash_code]
-    key_included = list.find_node(key)
-    return key_included.value = value if key_included
-
-    add_node(new_node, list)
-  end
-
-  def new_list(node, code)
-    list = LinkedList.new
-    list.head = node
-    @codes[code] = list
-  end
-
-  def add_node(node, list)
-    tail = list.find_tail
-    tail.next = node
   end
 
   # expands number of buckets
